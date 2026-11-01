@@ -1,0 +1,660 @@
+const TONES = ["陈述", "表扬", "严肃"];
+const REASONS = ["措辞调整", "AI 识别错误", "观察补充", "语气不符", "其他"];
+
+const specs = {
+  p1: "打开先看今晚要写的人。待发送和已处理分开，缺观察的优先。",
+  p2: "核对今日学情，右侧对比周均。写一句线下观察，再生成家长消息。",
+  p3: "生成稿可改。改了选修改原因并确认反馈，再发送或复制。",
+  p4: "发完点右下角「下一个待处理」继续；复制和发送只在消息框内。",
+};
+
+const db = {
+  csy: {
+    id: "csy",
+    name: "陈思远",
+    short: "思远",
+    parent: "陈妈妈",
+    grade: "高一",
+    avatar: "陈",
+    color: "#b4532a",
+    arrive: "18:30",
+    leave: "19:42",
+    duration: "1 小时 12 分",
+    progress: "数学函数复习和习题，计划 4 项完成 2 项",
+    completion: "42%",
+    errors: "6 道，集中在函数",
+    focus: "后 40 分钟有点散",
+    hint: "时长、完成都低于周均，今晚用严肃语气把节奏说清楚，不空夸。",
+    recTone: "严肃",
+    tone: "严肃",
+    status: "todo",
+    observe: "",
+    tags: ["后半段走神", "离开时有点疲", "主动问了一道函数"],
+    metrics: [
+      {
+        label: "学习时长",
+        value: "1小时12分",
+        sub: "18:30 到店 – 19:42 离店",
+        delta: "↓ 比周均少 1.1h",
+        dir: "down",
+      },
+      {
+        label: "学习内容",
+        value: "数学 · 复习函数 + 习题",
+        sub: "计划 4 项，完成 2 项",
+        delta: "—",
+        dir: "na",
+      },
+      {
+        label: "完成进度",
+        value: "42%",
+        sub: "今日计划完成度",
+        delta: "↓ 比周均低 36%",
+        dir: "down",
+      },
+      {
+        label: "错题",
+        value: "6 道 · 函数",
+        sub: "集中在函数综合",
+        delta: "↑ 比周均多 3 道",
+        dir: "down",
+      },
+      {
+        label: "专注",
+        value: "61",
+        sub: "后 40 分钟下降",
+        delta: "↓ 比周均低 12",
+        dir: "down",
+      },
+    ],
+  },
+  wyt: {
+    id: "wyt",
+    name: "王雨桐",
+    short: "雨桐",
+    parent: "王妈妈",
+    grade: "初三",
+    avatar: "王",
+    color: "#b0893a",
+    arrive: "16:18",
+    leave: "19:28",
+    duration: "3 小时 10 分",
+    progress: "物理预习力学并完成习题",
+    completion: "88%",
+    errors: "2 道，集中在物理",
+    focus: "后半段容易走神",
+    hint: "完成稳在周均附近，专注下滑。用陈述把完成和走神都说清楚。",
+    recTone: "陈述",
+    tone: "陈述",
+    status: "todo",
+    observe: "",
+    tags: ["人来了也做完了", "题做得认真", "后半段容易走神"],
+    metrics: [
+      {
+        label: "学习时长",
+        value: "3小时10分",
+        sub: "16:18 到店 – 19:28 离店",
+        delta: "持平周均",
+        dir: "flat",
+      },
+      {
+        label: "学习内容",
+        value: "物理 · 预习力学 + 习题",
+        sub: "全科在读",
+        delta: "—",
+        dir: "na",
+      },
+      {
+        label: "完成进度",
+        value: "88%",
+        sub: "今日计划完成度",
+        delta: "持平周均",
+        dir: "flat",
+      },
+      {
+        label: "错题",
+        value: "2 道 · 物理",
+        sub: "力学小题",
+        delta: "↓ 比周均少 1 道",
+        dir: "up",
+      },
+      {
+        label: "专注",
+        value: "49",
+        sub: "后半段走神",
+        delta: "↓ 比周均低 22",
+        dir: "down",
+      },
+    ],
+  },
+  lza: {
+    id: "lza",
+    name: "刘子昂",
+    short: "子昂",
+    parent: "刘妈妈",
+    grade: "高二",
+    avatar: "刘",
+    color: "#1e4a45",
+    arrive: "15:28",
+    leave: "20:05",
+    duration: "4 小时 37 分",
+    progress: "化学复习化学平衡并做了加练习题",
+    completion: "95%",
+    errors: "1 道，集中在化学平衡",
+    focus: "离开时还清醒",
+    hint: "完成和质量都高于周均，时长偏满。表扬执行，建议减量。",
+    recTone: "表扬",
+    tone: "表扬",
+    status: "sent",
+    observe: "今晚主动要求加一组化学，离开时还清醒，揉眼睛比较勤，我拦了一下没让再加。",
+    tags: ["主动加练", "揉眼睛比较勤"],
+    metrics: [
+      {
+        label: "学习时长",
+        value: "4小时37分",
+        sub: "15:28 到店 – 20:05 离店",
+        delta: "↑ 比周均多 0.6h",
+        dir: "up",
+      },
+      {
+        label: "学习内容",
+        value: "化学 · 复习平衡 + 加练",
+        sub: "理综加强",
+        delta: "—",
+        dir: "na",
+      },
+      {
+        label: "完成进度",
+        value: "95%",
+        sub: "今日计划完成度",
+        delta: "↑ 比周均高 4%",
+        dir: "up",
+      },
+      {
+        label: "错题",
+        value: "1 道 · 化学平衡",
+        sub: "加练第 3 组",
+        delta: "持平周均",
+        dir: "flat",
+      },
+      {
+        label: "专注",
+        value: "78",
+        sub: "离开时还清醒",
+        delta: "持平周均",
+        dir: "flat",
+      },
+    ],
+    draft: "",
+    original: "",
+    reason: "",
+    feedbackOk: true,
+    sentText: "",
+  },
+};
+
+function buildDraft(stu) {
+  const obs = stu.observe.trim();
+  const name = stu.short;
+  const parent = stu.parent;
+  const sign = "——伴学师 林晓晨，黄庄店";
+
+  const bodies = {
+    陈述: `${parent}晚上好～今天${name}在店里学了 ${stu.duration}，${stu.arrive} 到 ${stu.leave}。${stu.progress}，完成度 ${stu.completion}。
+
+今天能坐下来学，${stu.focus}。${obs}
+
+错的题有 ${stu.errors}，下一步重点把今天的错题过一遍。建议今晚先不加新题，让他把错题讲给您听——讲得出来，就是真的懂了。
+
+明天我们把数学收到两项，先求做完。
+${sign}`,
+
+    表扬: `${parent}晚上好～今天${name}${stu.arrive} 到店、${stu.leave} 离店，学了 ${stu.duration}。${stu.progress}，完成度 ${stu.completion}。
+
+${stu.focus}。${obs}
+
+错题 ${stu.errors}，可以再过一遍解题步骤。建议今晚先收工，把作息留住，明天加练少留一组。
+
+明天我们按这个量走。
+${sign}`,
+
+    严肃: `${parent}晚上好～今天${name}在店里学了 ${stu.duration}，${stu.arrive} 到 ${stu.leave}。${stu.progress}，完成度 ${stu.completion}，和这周平时比偏慢。
+
+${stu.focus}。${obs}时长和完成都比周均低，需要今天就把节奏说清楚。
+
+错的题有 ${stu.errors}，今晚请让他把错题讲给您听一遍，讲不出来的明天到店我们一起过。请尽量保证明天按时到店。
+
+明天我们把任务收到两项，先把完成稳住。
+${sign}`,
+  };
+
+  return bodies[stu.tone] || bodies.陈述;
+}
+
+db.lza.original = buildDraft(db.lza);
+db.lza.draft = db.lza.original;
+db.lza.sentText = db.lza.original;
+
+const state = {
+  screen: "p1",
+  tab: "todo",
+  current: "csy",
+  toast: "",
+  generating: false,
+  tip: "",
+  justSent: false,
+};
+
+const $screen = document.getElementById("phoneScreen");
+const $steps = document.getElementById("flowSteps");
+const $spec = document.getElementById("specText");
+
+function lockScroll(fn) {
+  const y = window.scrollY;
+  const body = $screen.querySelector(".wb-body");
+  const top = body ? body.scrollTop : 0;
+  fn();
+  window.scrollTo(0, y);
+  requestAnimationFrame(() => {
+    window.scrollTo(0, y);
+    const next = $screen.querySelector(".wb-body");
+    if (next) next.scrollTop = top;
+  });
+}
+
+function setStep(id) {
+  $spec.textContent = specs[id];
+  $steps.querySelectorAll(".flow-step").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.step === id);
+  });
+}
+
+function toast(text) {
+  state.toast = text;
+  let el = $screen.querySelector(".toast");
+  if (!el) {
+    el = document.createElement("div");
+    el.className = "toast";
+    $screen.appendChild(el);
+  }
+  el.textContent = text;
+  clearTimeout(state.toastTimer);
+  state.toastTimer = setTimeout(() => {
+    el.remove();
+    state.toast = "";
+  }, 1800);
+}
+
+function copyText(text) {
+  if (!text) return toast("还没有可复制的内容");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(
+      () => toast("已复制"),
+      () => toast("请手动全选复制")
+    );
+  } else toast("请手动全选复制");
+}
+
+function listBy(tab) {
+  const all = Object.values(db);
+  return tab === "done" ? all.filter((s) => s.status === "sent") : all.filter((s) => s.status !== "sent");
+}
+
+function nextPending(exceptId) {
+  return Object.values(db).find((s) => s.status !== "sent" && s.id !== exceptId);
+}
+
+function counts() {
+  return { todo: listBy("todo").length, done: listBy("done").length };
+}
+
+function bar() {
+  return `<div class="status-bar"><span>20:41</span><span>拾光日报</span></div>`;
+}
+
+function toastEl() {
+  return state.toast ? `<div class="toast">${state.toast}</div>` : "";
+}
+
+function deltaClass(dir) {
+  if (dir === "up") return "delta-up";
+  if (dir === "down") return "delta-down";
+  if (dir === "flat") return "delta-flat";
+  return "delta-na";
+}
+
+function metricsHtml(metrics) {
+  return `<div class="facts">${metrics
+    .map(
+      (m) => `<div class="metric">
+        <div class="lab">${m.label}</div>
+        <div class="val">${m.value}${m.sub ? `<small>${m.sub}</small>` : ""}</div>
+        <span class="delta ${deltaClass(m.dir)}">${m.delta}</span>
+      </div>`
+    )
+    .join("")}</div>`;
+}
+
+function renderList() {
+  state.screen = "p1";
+  state.justSent = false;
+  setStep(state.tab === "done" ? "p4" : "p1");
+  const n = counts();
+  const tab = state.tab;
+  const list = listBy(tab);
+  const cards = list.length
+    ? list
+        .map((stu) => {
+          const focus = stu.metrics.find((m) => m.label === "专注");
+          const done = stu.metrics.find((m) => m.label === "完成进度");
+          return `<div class="card" data-open="${stu.id}">
+            <div class="card-top">
+              <div class="who">
+                <div class="avatar" style="background:${stu.color}">${stu.avatar}</div>
+                <div>
+                  <b>${stu.name} · ${stu.grade}</b>
+                  <span>${stu.leave} 离店 · ${stu.duration}</span>
+                </div>
+              </div>
+              <span class="pill ${stu.status === "sent" ? "pill-ok" : "pill-wait"}">${stu.status === "sent" ? "已处理" : "待发送"}</span>
+            </div>
+            <p class="summary">${done.value}完成 · 专注${focus.value} · ${done.delta}</p>
+          </div>`;
+        })
+        .join("")
+    : `<div class="empty">${tab === "todo" ? "待发送已清完，可到已处理回看。" : "还没有已处理的日报。"}</div>`;
+
+  $screen.innerHTML = `
+    <div class="wb">
+      ${bar()}
+      <div class="wb-head">
+        <div>
+          <h3>待办</h3>
+          <p>10月29日 · 黄庄店 · 林晓晨</p>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab ${tab === "todo" ? "is-on" : ""}" type="button" data-tab="todo">待发送 <em>${n.todo}</em></button>
+        <button class="tab ${tab === "done" ? "is-on" : ""}" type="button" data-tab="done">已处理 <em>${n.done}</em></button>
+      </div>
+      <div class="wb-body">
+        ${
+          tab === "todo" && n.todo
+            ? `<div class="ai-banner"><small>今晚焦点</small><p>先写陈思远：时长和完成都低于周均。王雨桐完成稳，专注下滑。</p></div>`
+            : ""
+        }
+        ${cards}
+      </div>
+      <div class="home-indicator"></div>
+      ${toastEl()}
+    </div>
+  `;
+}
+
+function reasonPanel(stu, dirty) {
+  if (stu.feedbackOk && dirty) {
+    return `<div class="reason"><h4>修改原因</h4><p class="ok">已确认反馈：${stu.reason}</p></div>`;
+  }
+  return `<div class="reason" style="${dirty ? "" : "opacity:.45"}">
+    <h4>修改原因</h4>
+    <p>${dirty ? "改了稿，选一项后点确认反馈。" : "还没改动。"}</p>
+    ${REASONS.map((r) => `<button class="chip ${stu.reason === r ? "is-on" : ""}" type="button" data-reason="${r}" ${dirty ? "" : "disabled"}>${r}</button>`).join("")}
+    <button class="primary" type="button" data-confirm-reason ${dirty && stu.reason ? "" : "disabled"}>确认反馈</button>
+  </div>`;
+}
+
+function renderCompose(id, step) {
+  const stu = db[id];
+  state.current = id;
+  state.screen = "p2";
+  const hasDraft = Boolean(stu.draft);
+  const dirty = hasDraft && stu.draft !== stu.original;
+  const nxt = nextPending(id);
+  setStep(step || (state.justSent ? "p4" : hasDraft ? "p3" : "p2"));
+
+  $screen.innerHTML = `
+    <div class="wb">
+      ${bar()}
+      <div class="wb-head">
+        <div>
+          <button class="back" type="button" data-go="p1">← 返回</button>
+          <h3>${stu.name} · ${stu.grade}</h3>
+          <p>${stu.arrive}–${stu.leave} · 建议语气「${stu.recTone}」</p>
+        </div>
+      </div>
+      <div class="wb-body">
+        <div class="sec gray">
+          <h4>今日学情 · 对比周均</h4>
+          ${metricsHtml(stu.metrics)}
+        </div>
+        <div class="ai-banner"><small>今晚怎么说</small><p>${stu.hint}</p></div>
+        <div class="sec">
+          <h4>线下观察 <span class="must">必填</span></h4>
+          <textarea class="observe" id="obsBox" placeholder="今天在店里亲眼看到什么……">${stu.observe}</textarea>
+          <div class="tags">${stu.tags.map((t) => `<button class="chip" type="button" data-tag="${t}">${t}</button>`).join("")}</div>
+          <div class="row" style="margin-top:10px">
+            <span class="summary" style="margin:0">${stu.observe.trim() ? "可以生成" : "先写观察"}</span>
+            <button class="gen" type="button" data-gen ${stu.observe.trim() && !state.generating ? "" : "disabled"}>${state.generating ? "生成中…" : "生成日报"}</button>
+          </div>
+        </div>
+        ${
+          hasDraft
+            ? `<div class="sec" id="draftSec">
+                <h4>发给家长的消息</h4>
+                <div class="tags" style="margin-top:0;margin-bottom:10px">${TONES.map((t) => `<button class="chip ${stu.tone === t ? "is-on" : ""}" type="button" data-tone="${t}">${t}${t === stu.recTone ? " · 推荐" : ""}</button>`).join("")}</div>
+                <textarea class="draft" id="draftBox">${stu.draft}</textarea>
+                <div class="msg-actions">
+                  <button class="ghost" type="button" data-copy>复制</button>
+                  <button class="primary" type="button" data-send ${stu.status === "sent" ? "disabled" : ""}>${stu.status === "sent" ? "已发送" : "发送"}</button>
+                </div>
+                ${reasonPanel(stu, dirty)}
+              </div>`
+            : `<div class="sec"><h4>发给家长的消息</h4><p class="summary">写完观察后点「生成日报」，消息、语气、复制和发送会出现在这里。</p></div>`
+        }
+        ${state.tip ? `<p class="summary" style="color:var(--accent)">${state.tip}</p>` : ""}
+      </div>
+      <div class="foot foot-next">
+        <span class="foot-spacer"></span>
+        <button class="primary" type="button" data-next ${nxt ? "" : "disabled"}>${nxt ? "下一个待处理" : "已全部处理"}</button>
+      </div>
+      <div class="home-indicator"></div>
+      ${toastEl()}
+    </div>
+  `;
+
+  const obs = document.getElementById("obsBox");
+  if (obs) {
+    obs.addEventListener("input", () => {
+      stu.observe = obs.value;
+      const genBtn = $screen.querySelector("[data-gen]");
+      if (genBtn) genBtn.disabled = !stu.observe.trim() || state.generating;
+    });
+  }
+  const draft = document.getElementById("draftBox");
+  if (draft) {
+    draft.addEventListener("input", () => {
+      stu.draft = draft.value;
+      const nowDirty = stu.draft !== stu.original;
+      if (!nowDirty) {
+        stu.reason = "";
+        stu.feedbackOk = false;
+      } else stu.feedbackOk = false;
+      const box = $screen.querySelector(".reason");
+      if (box) box.outerHTML = reasonPanel(stu, nowDirty);
+    });
+  }
+}
+
+function showDraft(stu) {
+  lockScroll(() => {
+    renderCompose(stu.id, "p3");
+    const body = $screen.querySelector(".wb-body");
+    const sec = document.getElementById("draftSec");
+    if (body && sec) body.scrollTop = Math.max(0, sec.offsetTop - 8);
+  });
+}
+
+$screen.addEventListener("mousedown", (event) => {
+  if (event.target.closest("button")) event.preventDefault();
+});
+
+$screen.addEventListener("click", (event) => {
+  if (event.target.closest("button")) event.preventDefault();
+  const tab = event.target.closest("[data-tab]");
+  const open = event.target.closest("[data-open]");
+  const go = event.target.closest("[data-go]");
+  const tag = event.target.closest("[data-tag]");
+  const tone = event.target.closest("[data-tone]");
+  const gen = event.target.closest("[data-gen]");
+  const reason = event.target.closest("[data-reason]");
+  const confirm = event.target.closest("[data-confirm-reason]");
+  const copy = event.target.closest("[data-copy]");
+  const send = event.target.closest("[data-send]");
+  const nextBtn = event.target.closest("[data-next]");
+
+  if (tab) {
+    state.tab = tab.dataset.tab;
+    lockScroll(() => renderList());
+    return;
+  }
+  if (open) {
+    state.tip = "";
+    state.justSent = false;
+    lockScroll(() => renderCompose(open.dataset.open));
+    return;
+  }
+  if (go) {
+    state.justSent = false;
+    state.tip = "";
+    lockScroll(() => renderList());
+    return;
+  }
+  if (tag) {
+    const stu = db[state.current];
+    const obs = document.getElementById("obsBox");
+    stu.observe = (stu.observe ? stu.observe.replace(/。?$/, "，") : "") + tag.dataset.tag;
+    if (obs) {
+      obs.value = stu.observe;
+      const genBtn = $screen.querySelector("[data-gen]");
+      if (genBtn) genBtn.disabled = !stu.observe.trim() || state.generating;
+    }
+    return;
+  }
+  if (tone) {
+    const stu = db[state.current];
+    stu.tone = tone.dataset.tone;
+    stu.feedbackOk = false;
+    stu.reason = "";
+    if (stu.draft) {
+      stu.original = buildDraft(stu);
+      stu.draft = stu.original;
+    }
+    lockScroll(() => renderCompose(stu.id, stu.draft ? "p3" : "p2"));
+    return;
+  }
+  if (gen && !gen.disabled) {
+    const stu = db[state.current];
+    const obs = document.getElementById("obsBox");
+    if (obs) stu.observe = obs.value;
+    if (!stu.observe.trim()) return;
+    state.generating = true;
+    stu.feedbackOk = false;
+    stu.reason = "";
+    lockScroll(() => renderCompose(stu.id, "p3"));
+    setTimeout(() => {
+      stu.original = buildDraft(stu);
+      stu.draft = stu.original;
+      state.generating = false;
+      showDraft(stu);
+    }, 550);
+    return;
+  }
+  if (reason) {
+    db[state.current].reason = reason.dataset.reason;
+    db[state.current].feedbackOk = false;
+    lockScroll(() => renderCompose(state.current, "p3"));
+    return;
+  }
+  if (confirm) {
+    const stu = db[state.current];
+    const box = document.getElementById("draftBox");
+    if (box) stu.draft = box.value;
+    if (!stu.reason) return;
+    stu.feedbackOk = true;
+    toast("已记录修改原因：" + stu.reason);
+    lockScroll(() => renderCompose(stu.id, "p3"));
+    return;
+  }
+  if (copy) {
+    copyText(db[state.current].draft || db[state.current].sentText);
+    return;
+  }
+  if (send && !send.disabled) {
+    const stu = db[state.current];
+    const box = document.getElementById("draftBox");
+    if (box) stu.draft = box.value;
+    const dirty = stu.draft !== stu.original;
+    if (dirty && !stu.feedbackOk) {
+      state.tip = "请选修改原因并点确认反馈";
+      lockScroll(() => renderCompose(stu.id, "p3"));
+      return;
+    }
+    stu.status = "sent";
+    stu.sentText = stu.draft;
+    state.justSent = true;
+    state.tip = "";
+    toast("已发给" + stu.parent);
+    lockScroll(() => renderCompose(stu.id, "p4"));
+    return;
+  }
+  if (nextBtn && !nextBtn.disabled) {
+    const nxt = nextPending(state.current);
+    if (!nxt) {
+      state.tab = "done";
+      lockScroll(() => renderList());
+      return;
+    }
+    state.tip = "";
+    state.justSent = false;
+    const y = window.scrollY;
+    renderCompose(nxt.id, "p2");
+    window.scrollTo(0, y);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, y);
+      const body = $screen.querySelector(".wb-body");
+      if (body) body.scrollTop = 0;
+    });
+  }
+});
+
+$steps.addEventListener("mousedown", (event) => {
+  if (event.target.closest("button")) event.preventDefault();
+});
+
+$steps.addEventListener("click", (event) => {
+  event.preventDefault();
+  const step = event.target.closest(".flow-step");
+  if (!step) return;
+  const y = window.scrollY;
+  const id = step.dataset.step;
+  if (id === "p1") {
+    state.tab = "todo";
+    lockScroll(() => renderList());
+  } else if (id === "p2") {
+    lockScroll(() => renderCompose("csy", "p2"));
+  } else if (id === "p3") {
+    const stu = db.csy;
+    if (!stu.observe.trim()) stu.observe = "后半段走神，离开时有点疲，函数题主动问了一次。";
+    if (!stu.draft) {
+      stu.original = buildDraft(stu);
+      stu.draft = stu.original;
+    }
+    showDraft(stu);
+  } else {
+    state.tab = "done";
+    lockScroll(() => renderList());
+  }
+  window.scrollTo(0, y);
+});
+
+renderList();

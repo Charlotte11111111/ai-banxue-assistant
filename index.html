@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>离店学情日报 · 产品方案</title>
+  <link rel="stylesheet" href="styles.css?v=1101c" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">拾</span>
+      <div>
+        <strong>拾光伴学</strong>
+        <small>产品方案 · V1.1</small>
+      </div>
+    </div>
+    <nav class="topnav">
+      <a href="#q1">1. 优先环节</a>
+      <a href="#q2">2. 第一期场景</a>
+      <a href="#q3">3. 方案与原型</a>
+      <a href="#q4">4. 落地与评测</a>
+    </nav>
+    <div class="top-meta">对象：门店伴学师 · 手机端</div>
+  </header>
+
+  <article class="doc">
+    <header class="doc-head">
+      <p class="meta">拾光伴学 · AI 伴学师助手 · 第一阶段 · 2026-11-01</p>
+      <h1>离店学情日报</h1>
+      <p class="deck">学生离店后，伴学师在手机端核对学情（含相对周均变化）、补写线下观察，一键生成可发企微的家长消息；支持改稿、复制、发送，并连续处理下一位。改稿原因沉淀为模型与模板的训练信号。</p>
+    </header>
+
+    <section id="q1">
+      <p class="q-label">问题一</p>
+      <h2>伴学师日常哪些环节优先用 AI 优化</h2>
+      <p>拾光伴学的交付链路是：伴学本负责学、空间负责场、伴学师负责管。伴学师人效瓶颈不在「有没有数据」，而在「看完数据后如何当晚形成可发给家长的判断与话术」。现有智能运营系统已具备时长、任务完成、知识点掌握度、到店/离店与专注等字段；缺口在决策与生成层。</p>
+      <p>候选能力用<strong>商业价值 × 落地可行性</strong>排序。商业价值看：家长当日是否感知服务、是否服务续费沟通、写法能否复制到加盟店。落地可行性看：主数据是否已在伴学本、产出物是否明确、班次内是否可在数分钟内完成、人机责任是否可审计。</p>
+
+      <figure class="quad">
+        <figcaption>图 1　候选能力四象限（商业价值 × 落地可行性）</figcaption>
+        <div class="quad-plot" role="img" aria-label="四象限对比图">
+          <span class="axis-y">商业价值高 ↑</span>
+          <span class="axis-y-low">低</span>
+          <span class="axis-x-left">落地可行性低</span>
+          <span class="axis-x-right">落地可行性高 →</span>
+          <div class="quad-grid">
+            <div class="dot d-report is-pick" style="left: 78%; bottom: 76%;">
+              <b>A 离店学情日报</b>
+              <small>P0</small>
+            </div>
+            <div class="dot d-plan" style="left: 38%; bottom: 72%;">
+              <b>B 计划动态调整</b>
+              <small>P1</small>
+            </div>
+            <div class="dot d-watch" style="left: 18%; bottom: 62%;">
+              <b>C 到店专注识别</b>
+              <small>P2</small>
+            </div>
+            <div class="dot d-reply" style="left: 58%; bottom: 42%;">
+              <b>D 家长自动回复</b>
+              <small>P1</small>
+            </div>
+            <div class="dot d-board" style="left: 82%; bottom: 22%;">
+              <b>E 看板增强</b>
+              <small>P2</small>
+            </div>
+          </div>
+        </div>
+        <table class="quad-note">
+          <thead>
+            <tr>
+              <th>能力</th>
+              <th>商业价值</th>
+              <th>落地可行性</th>
+              <th>优先级</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="is-pick">
+              <td>A 离店学情日报</td>
+              <td>家长每日可见服务过程；续费沟通有当日依据；话术与结构可复制到加盟店</td>
+              <td>主数据已在伴学本；产出为一条待发企微消息；伴学师确认后发送，责任清晰</td>
+              <td>P0 · 第一期唯一主场景</td>
+            </tr>
+            <tr>
+              <td>B 计划动态调整</td>
+              <td>直接影响次日学什么、学多少</td>
+              <td>需同时对齐测评、校历、门店排期与家长预期；误调成本高</td>
+              <td>P1 · 先落在日报「建议」段，不自动改计划</td>
+            </tr>
+            <tr>
+              <td>D 家长自动回复</td>
+              <td>降低重复咨询占用的班次时间</td>
+              <td>企微通道可复用；需先固化口径、升级人工与敏感问题规则</td>
+              <td>P1 · 本期只做家长回复回流待办，由人回复</td>
+            </tr>
+            <tr>
+              <td>C 到店专注识别</td>
+              <td>辅助现场判断今晚优先谈话对象</td>
+              <td>依赖采集、隐私方案与加盟店硬件统一</td>
+              <td>P2 · 沿用已有专注字段，硬件成熟后再立项</td>
+            </tr>
+            <tr>
+              <td>E 看板增强</td>
+              <td>对会看数的店长有增量</td>
+              <td>现有系统已可看时长与完成率，增量主要在展示</td>
+              <td>P2 · 维持现状，人力优先保障日报闭环</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+      <p>综上：第一期把 AI 用在「学情解读 + 家长消息起草」。现场陪伴与情绪安抚仍由伴学师完成；讲题与学科辅导不进入本产品范围。</p>
+    </section>
+
+    <section id="q2">
+      <p class="q-label">问题二</p>
+      <h2>第一期核心场景：手机端离店学情日报</h2>
+      <p><strong>用户。</strong>门店伴学师（第一用户）；家长为消息接收方；店长可查看超时未处理项（后置）。</p>
+      <p><strong>场景定义。</strong>学生离店且当日学情同步完成后，伴学师在手机端打开待办，核对学情指标与相对周均变化，填写线下观察，生成家长消息；在消息区内选择语气（陈述 / 表扬 / 严肃）、编辑、复制或发送；处理完成后进入下一位待处理学生，页面回到顶部。</p>
+      <p><strong>端到端链路（按发生顺序）。</strong></p>
+      <ol class="loop">
+        <li>
+          <strong>数据接入。</strong>
+          同步字段：到店/离店时间、学习时长、学习内容（学科 + 预习/复习/习题等）、完成进度、错题与薄弱点、专注表现；并计算各指标相对近 7 日周均的升/降/持平。触发：学生离店或当日数据同步完成 → 进入「待发送」。
+        </li>
+        <li>
+          <strong>待办分发。</strong>
+          列表分「待发送 / 已处理」。卡片展示离店时间、时长、完成与周均对比摘要，便于决定先处理谁。
+        </li>
+        <li>
+          <strong>核对学情 + 写观察。</strong>
+          学情区只读；每项指标右侧展示相对周均变化。伴学师必填一句线下观察（到店才可知的信息）。系统可基于周均变化给出「今晚怎么说」提示，并推荐语气。
+        </li>
+        <li>
+          <strong>生成家长消息。</strong>
+          观察提交后点击生成。输出为可直接发企微的纯文本：称呼与问候、今日完成（含具体数字）、专注与状态、薄弱点与可操作建议、观察自然融入、落款。数字仅允许来自已同步字段；缺失字段跳过、不编造。
+        </li>
+        <li>
+          <strong>改稿 / 复制 / 发送。</strong>
+          语气、正文编辑、复制、发送均在「发给家长的消息」模块内完成。正文被修改后，须选择修改原因并点击「确认反馈」后方可发送。原因枚举：措辞调整、AI 识别错误、观察补充、语气不符、其他。
+        </li>
+        <li>
+          <strong>连续处理。</strong>
+          右下角「下一个待处理」进入下一名待发送学生，并滚至该页顶部。全部处理完后列表归入「已处理」。
+        </li>
+      </ol>
+      <p><strong>人机边界。</strong>AI：排序提示、周均对比展示、消息起草、语气模板。人：线下观察、改稿、确认反馈、发送决策。系统：记录发送人、时间与修改原因，供审计与迭代。</p>
+    </section>
+
+    <section id="q3">
+      <p class="q-label">问题三</p>
+      <h2>产品方案与关键流程（对齐原型）</h2>
+      <p><strong>定位。</strong>门店伴学师手机端「离店学情日报」工具。目标是把「数据 → 观察 → 生成 → 发送 → 下一位」在一个班次内走通。</p>
+      <p><strong>信息架构。</strong>待办页含「待发送 / 已处理」两个 Tab，卡片进入学生详情。学生页自上而下为：今日学情（含周均对比）→ 线下观察（必填）→ 生成日报 → 发给家长的消息（语气 + 正文 + 复制/发送 + 修改原因确认）→ 底部「下一个待处理」。</p>
+      <p><strong>规则（上线门槛）。</strong>观察未填不可生成；生成消息不得出现输入外数字与科目；改稿须确认修改原因后才可发送；复制与发送仅出现在消息模块内；「下一个待处理」进入下一位并回到页面顶部。</p>
+      <p><strong>生成约束（对接模型提示词）。</strong>角色为伴学师本人口吻；结构固定为称呼、今日完成、专注与状态、薄弱点与建议、观察融入、落款；全文建议不超过 300 字；禁止空泛夸奖、成绩承诺、焦虑措辞、续费促销与「根据数据显示」等机器口吻。</p>
+
+      <div class="proto-stage">
+        <div class="proto-copy">
+          <ol class="flow-steps" id="flowSteps">
+            <li><button class="flow-step is-active" data-step="p1" type="button"><i>1</i>待办列表</button></li>
+            <li><button class="flow-step" data-step="p2" type="button"><i>2</i>学情 + 观察</button></li>
+            <li><button class="flow-step" data-step="p3" type="button"><i>3</i>生成改稿</button></li>
+            <li><button class="flow-step" data-step="p4" type="button"><i>4</i>下一个待处理</button></li>
+          </ol>
+          <p class="spec" id="specText">打开先看今晚要写的人。点进去核对学情（含周均对比），写观察后生成。</p>
+        </div>
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" id="phoneScreen"></div>
+          </div>
+          <p class="phone-hint">可点击原型 · 与上文流程一致</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="q4">
+      <p class="q-label">问题四</p>
+      <h2>研发关注点、评测流程与指标目标</h2>
+      <p><strong>1. 研发重点。</strong></p>
+      <p><strong>数据。</strong>主链路对接伴学本与门店到离店记录。必选字段：学生、科目、时长、到店/离店、学习内容类型、完成进度、错题（题量+知识点）、专注；并产出周均基线用于对比。缺字段时事实区标「数据缺失」或不展示该项，模型不得补数。</p>
+      <p><strong>生成。</strong>观察提交后触发生成；超时需可重试。事实句只引用已同步字段；语气模板（陈述/表扬/严肃）与推荐逻辑可配置。输出落库保存原稿与终稿，便于 diff。</p>
+      <p><strong>交互。</strong>手机优先。消息模块内完成语气切换、编辑、复制、发送。改稿触发修改原因 +「确认反馈」。底部仅保留「下一个待处理」，进入下一位时滚动到页顶。</p>
+      <p><strong>触达与权限。</strong>优先企微单发；发送失败可重试且草稿保留。加盟店数据按门店隔离；发送记录可审计。内容边界：过程服务口径，不进入讲题与心理诊断标签。</p>
+      <p><strong>迭代。</strong>修改原因与前后文按周汇总，用于提示词与门店模板优化；模板默认按门店隔离。</p>
+
+      <p><strong>2. 评测流程。</strong></p>
+      <ol class="loop">
+        <li>
+          <strong>离线评测（发版前）。</strong>
+          抽样真实脱敏学情 + 观察，跑生成。人工按清单打分：事实忠实度、观察未篡改、语气合规、结构完整、字数与可读性。不通过则阻断上线。
+        </li>
+        <li>
+          <strong>门店试点（2–4 周）。</strong>
+          选取 3–5 家店、固定伴学师样本。先开「生成+复制」，再开「一键发送」。每日看链路与使用指标，每周复盘修改原因分布与典型改稿案例。
+        </li>
+        <li>
+          <strong>对照评估。</strong>
+          同店试点前后对比：单份沟通耗时、观察填写率、家长已读/回复、异常当天联系达成率。有条件时设对照班次（不用助手 vs 用助手）。
+        </li>
+        <li>
+          <strong>放量门槛。</strong>
+          同时满足：生成与发送成功率达标、观察填写率达标、事实被改比例可控、家长侧无显著投诉抬升。通过后按加盟区域分批放开。
+        </li>
+        <li>
+          <strong>持续运营。</strong>
+          周报：修改原因 Top、事实改写案例、超时未发积压。月报：续费与投诉等滞后指标，决定是否启动 P1（计划建议强化 / 家长回复辅助）。
+        </li>
+      </ol>
+
+      <p><strong>3. 指标与目标。</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>层级</th>
+            <th>指标</th>
+            <th>目标</th>
+            <th>警戒线</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>链路</td>
+            <td>离店后待办出现时效；生成成功率；企微发送成功率</td>
+            <td>待办 1 分钟内可见；生成成功 ≥ 95%；发送成功 ≥ 99%</td>
+            <td>生成成功连续 3 天低于 90%</td>
+          </tr>
+          <tr>
+            <td>使用</td>
+            <td>待发送打开率；观察填写率；单份「打开→发送」时长；下一位点击率</td>
+            <td>观察填写 ≥ 90%；单份 ≤ 5 分钟；班次内清完待发送</td>
+            <td>单份仍 ≥ 15 分钟，或大量积压到次日</td>
+          </tr>
+          <tr>
+            <td>质量</td>
+            <td>生成后修改率；修改原因确认率；事实数字被改比例；离线评测通过率</td>
+            <td>有改必有原因；事实改写 &lt; 10%；离线抽样通过 ≥ 85%</td>
+            <td>事实数字大面积被改（取数或口径错误）</td>
+          </tr>
+          <tr>
+            <td>家长侧</td>
+            <td>已读率、回复率；回复后 24h 内响应率</td>
+            <td>已读可统计；回复进待办；24h 响应 ≥ 90%</td>
+            <td>发送量升、已读与回复双降</td>
+          </tr>
+          <tr>
+            <td>业务（滞后）</td>
+            <td>异常当天联系达成率；试点续费率、投诉率；新人发出合格稿周期</td>
+            <td>异常当天联系拉满；投诉不抬升；新人合格周期缩短</td>
+            <td>续费升且投诉同步升（话术制造焦虑）</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>本期交付边界。</strong>P0 仅交付离店日报手机闭环（待办、学情周均对比、观察、生成、改稿反馈、复制/发送、下一个待处理）。P1/P2 能力不纳入本版本范围。</p>
+    </section>
+  </article>
+
+  <footer class="footer">
+    <span>拾光伴学 · 离店学情日报</span>
+    <span>对内产品方案 · 供研发 / 运营 / 教研对齐</span>
+  </footer>
+  <script src="prototype.js?v=1101c"></script>
+</body>
+</html>
