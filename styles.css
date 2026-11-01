@@ -309,7 +309,7 @@ tr.is-pick td { background: #f8efe3; color: var(--ink); }
 .stat.is-on span { color: #d6cbb8; }
 .tabs {
   display: flex;
-  gap: 18px;
+  gap: 14px;
   padding: 10px 16px 0;
   border-bottom: 1px solid var(--line);
 }
@@ -375,6 +375,7 @@ tr.is-pick td { background: #f8efe3; color: var(--ink); }
 .pill-wait { background: #f3dfc8; color: var(--accent); }
 .pill-ok { background: #d9eadc; color: var(--ok); }
 .pill-bad { background: #f4d4d0; color: #9f1239; }
+.pill-reply { background: #dce8ea; color: var(--teal); }
 .pill-mute { background: #ece7dc; color: var(--muted); }
 .summary { margin: 8px 0 0; font-size: 13px; color: var(--ink-2); line-height: 1.55; }
 .progress {
@@ -544,7 +545,7 @@ tr.is-pick td { background: #f8efe3; color: var(--ink); }
 }
 .modal h4 { margin: 0 0 8px; font-size: 16px; }
 .modal p { margin: 0 0 14px; font-size: 13px; color: var(--ink-2); max-width: none; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .popover {
   width: min(360px, calc(100% - 40px));
   background: #fffcf7;
@@ -603,6 +604,44 @@ tr.is-pick td { background: #f8efe3; color: var(--ink); }
   font-size: 13px;
   background: #fffcf7;
   resize: vertical;
+}
+.draft.is-bad { border-color: #9f1239; background: #fdf4f3; }
+.tag-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.block-list {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #e8b4ae;
+  background: #fdf4f3;
+}
+.block-list h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #9f1239;
+}
+.block-list p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.block-list p:last-child { margin-bottom: 0; }
+.block-list b { color: #9f1239; }
+.sent-preview, .parent-bubble {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.parent-bubble {
+  background: #efe7d8;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 .reason {
   border: 1px solid #e2c39a;
